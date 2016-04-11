@@ -1,0 +1,24 @@
+{
+  "name": "klas",
+  "description": "javascript class,inherit,oo lib to all browser and nodejs",
+  "version": "0.9.0",
+  "keywords": [
+    "class",
+    "inherit",
+    "oo"
+  ],
+  "author": {
+    "name": "p2world"
+  },
+  "homepage": "http://p2world.github.io/klas/",
+  "bugs": {
+    "url": "https://github.com/p2world/klas/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/p2world/klas.git"
+  },
+  "scripts": {
+    "test": "node test.js"
+  }
+}
