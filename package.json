@@ -1,7 +1,7 @@
 {
   "name": "klas",
-  "description": "javascript class,inherit,oo lib to all browser and nodejs",
-  "version": "0.9.0",
+  "description": "javascript class,oo,multiple-inheritance lib to all browser and nodejs",
+  "version": "0.10.0",
   "keywords": [
     "class",
     "inherit",
@@ -19,6 +19,9 @@
     "url": "https://github.com/p2world/klas.git"
   },
   "scripts": {
-    "test": "node test.js"
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "better-assert": "^1.0.2"
   }
 }

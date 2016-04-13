@@ -1,96 +1,135 @@
 # klas
 
-javascript class,inherit,oo lib to all browser and nodejs
+javascript class,oo,multiple-inheritance lib to all browser and nodejs
+
+Probably the fastest JS class system out there. 100% no wrappers, same perfs as hand-written pure JS classes.
+
+inspired by [my.class.js](https://github.com/jiem/my-class)
 
 usage:`klas([parent],[mixins..],proto)`
 
-```javascript
-var assert = require('assert');
 
+
+```javascript
+var assert = require('better-assert');
+
+// create class
 var A = klas({
-    constructor: function() {
+    statics_:{
+        toString:function(){
+            return 'A toString';
+        },
+        staticA:function(){
+            return 'staticA';
+        }
+    },
+    constructor_: function() {
         this.c = this.a + this.b;
     },
     a: 1,
     b: 1,
-    fn:function(){
+    fn: function() {
         return 'fn in A';
     },
     fnA: function() {
         return 'fnA';
+    },
+    toString:function(){
+        return 'a:'+this.a;
     }
 });
 
-assert.ok((new A) instanceof A);
+assert(A.prototype.b === 1);
+assert(a instanceof A);
+assert(a.c === 2);
+assert(A + '' === 'A toString');
+assert(A.staticA() === 'staticA');
+assert(a + '' === 'a:1');
 
+
+// inherit
+var bConstructor_ = function() {
+    B.super_.call(this);
+    this.d = this.c + 1;
+};
 var B = klas(A, {
-    fn:function(){
+    statics_:{
+        staticB:function(){
+            return 'staticB';
+        }
+    },
+    constructor_: bConstructor_,
+    fn: function() {
         return 'fn in B';
     },
-    b: 2
+    a: 2
 });
 
 var b = new B();
-assert.equal(b.c,3);
-assert.equal(b.fn(),'fn in B');
 
-var mixin1 = {
-    fn: function() {
-        return 'fn in mixin1';
-    }
-};
-var mixin2 = {
-    fn: function() {
-        return 'fn in mixin2';
-    }
-};
-var C = klas(B, mixin1,mixin2, {
-    constructor: function() {
-        // must call super_
-        C.super_.call(this);
-        this.d = this.c + this.a;
+assert(bConstructor_ === B);
+assert(b instanceof B);
+assert(b instanceof A);
+assert(b.fn() === 'fn in B');
+assert(B + '' === 'A toString');
+assert(b + '' === 'a:2');
+assert(B.staticA() == 'staticA');
+assert(B.staticB() == 'staticB');
+assert(b.c === 3);
+
+
+// mixin
+var C = klas({
+    statics_: {
+        toString: function() {
+            return 'C toString';
+        },
+        fnC: function() {
+            return 'fnC';
+        }
     },
-    fnC: function() {
-        return 'fnC';
+    toString: function() {
+        return 'c toString';
+    },
+    methodC: function() {
+        return 'methodC';
     }
 });
 
-var c = new C();
-
-assert.equal(c.fnA(),'fnA');
-assert.equal(c.fn(),'fn in mixin2');
-assert.equal(c.fnC(),'fnC');
-assert.equal(c.d,4);
-
-
-var D=klas(C,{
-    fn:function(){
-        return 'fn in D';
+var D = klas({
+    statics_: {
+        toString: function() {
+            return 'D toString';
+        }
+    },
+    toString: function() {
+        return 'd toString';
     }
 });
+// D is a mixin class
+var E = klas(C, D, {});
+var e = new E();
+assert(e instanceof E);
+assert(e instanceof C);
+assert(!(e instanceof D));
+assert('' + e === 'd toString');
+assert(E + '' === 'D toString');
+assert(e.methodC() === 'methodC');
 
-var d=new D();
-assert.equal(d.fn(),'fn in D');
-
-
-var E=klas(mixin2,{
-    constructor:function(name){
-        // must call super_
-        E.super_.call(this);
-        this.name=name;
-    }
-});
-var e=new E('e name');
-
-assert.equal(e.name,'e name');
-assert.equal(e.fn(),'fn in mixin2');
+// C is a mixin class
+var F = klas(D, C, {});
+var f = new F();
+assert(E.fnC() === 'fnC');
+assert('' + new F === 'c toString');
+assert(F + '' === 'C toString');
+assert((new F).methodC() === 'methodC');
+assert(F.fnC() === 'fnC');
 ```
 
 
 ## other
 
 * `klas` is a global variable
-* constructor must call `super_`
-* the default constructor is `.super_.call(this);`
+* constructor_ must call `super_`
+* the default constructor_ is `Class.super_.call(this);`
 * the overwrite order is the arguments order:`parent < mixins1 < mixin2 < proto`
-* no parent but mixins class : `klas(mixin1, mixin2, {})`
