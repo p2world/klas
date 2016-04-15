@@ -6,7 +6,7 @@ Probably the fastest JS class system out there. 100% no wrappers, same perfs as 
 
 inspired by [my.class.js](https://github.com/jiem/my-class)
 
-usage:`klas([parent],[mixins..],proto)`
+usage:`klas.extend([mixins..],proto)`
 
 
 
@@ -14,7 +14,7 @@ usage:`klas([parent],[mixins..],proto)`
 var assert = require('better-assert');
 
 // create class
-var A = klas({
+var A = klas.extend({
     statics_:{
         toString:function(){
             return 'A toString';
@@ -52,7 +52,7 @@ var bConstructor_ = function() {
     B.super_.call(this);
     this.d = this.c + 1;
 };
-var B = klas(A, {
+var B = A.extend({
     statics_:{
         staticB:function(){
             return 'staticB';
@@ -79,7 +79,7 @@ assert(b.c === 3);
 
 
 // mixin
-var C = klas({
+var C = klas.extend({
     statics_: {
         toString: function() {
             return 'C toString';
@@ -96,7 +96,7 @@ var C = klas({
     }
 });
 
-var D = klas({
+var D = klas.extend({
     statics_: {
         toString: function() {
             return 'D toString';
@@ -107,7 +107,7 @@ var D = klas({
     }
 });
 // D is a mixin class
-var E = klas(C, D, {});
+var E = C.extend(D, {});
 var e = new E();
 assert(e instanceof E);
 assert(e instanceof C);
@@ -117,7 +117,7 @@ assert(E + '' === 'D toString');
 assert(e.methodC() === 'methodC');
 
 // C is a mixin class
-var F = klas(D, C, {});
+var F = D.extend(C, {});
 var f = new F();
 assert(E.fnC() === 'fnC');
 assert('' + new F === 'c toString');
@@ -129,7 +129,7 @@ assert(F.fnC() === 'fnC');
 
 ## other
 
-* `klas` is a global variable
+* `Klas` is a global variable
 * constructor_ must call `super_`
-* the default constructor_ is `Class.super_.call(this);`
-* the overwrite order is the arguments order:`parent < mixins1 < mixin2 < proto`
+* the default constructor_ is `super_.call(this);`
+* the overwrite order is the arguments order:`super_ < mixins1 < mixin2 < proto`

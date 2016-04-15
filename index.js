@@ -3,8 +3,9 @@
      * klas is a global variable
      * [super_],[mixin..],proto
      */
-    klas = function() {
-        var super_ = function() {};
+    Klas=function(){};
+    Klas.extend = function() {
+        var super_ = this;
         var proto;
         // super_ + mixins
         var mixins = [];
@@ -12,12 +13,9 @@
         // init params
         if (arguments.length === 0) {
             proto = {};
-        } else if (arguments.length === 1) {
-            proto = arguments[0];
         } else {
-            mixins = [].slice.call(arguments, 1, -1);
+            mixins = [].slice.call(arguments, 0, -1);
             proto = arguments[arguments.length - 1];
-            super_ = arguments[0];
         }
 
         // default constructor

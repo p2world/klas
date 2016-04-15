@@ -1,7 +1,7 @@
 {
   "name": "klas",
   "description": "javascript class,oo,multiple-inheritance lib to all browser and nodejs",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "keywords": [
     "class",
     "inherit",

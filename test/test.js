@@ -1,8 +1,8 @@
-/*global klas,describe,it*/
+/*global Klas,describe,it*/
 require('../');
 var assert = require('better-assert');
-describe('klas', function() {
-    var A = klas({
+describe('Klas', function() {
+    var A = Klas.extend({
         statics_: {
             toString: function() {
                 return 'A toString';
@@ -44,7 +44,7 @@ describe('klas', function() {
         });
     });
     describe('inherit1', function() {
-        var B = klas(A, {
+        var B = A.extend({
             statics_: {
                 staticB: function() {
                     return 'staticB';
@@ -63,8 +63,8 @@ describe('klas', function() {
             assert(b.fn() === 'fn in B');
             assert(B + '' === 'A toString');
             assert(b + '' === 'a:2');
-            assert(B.staticA() == 'staticA');
-            assert(B.staticB() == 'staticB');
+            assert(B.staticA() === 'staticA');
+            assert(B.staticB() === 'staticB');
         });
 
         it('super constructor_', function() {
@@ -76,7 +76,7 @@ describe('klas', function() {
             B.super_.call(this);
             this.d = this.c + 1;
         };
-        var B = klas(A, {
+        var B = A.extend({
             constructor_: bConstructor_,
             fn: function() {
                 return 'fn in B';
@@ -90,7 +90,7 @@ describe('klas', function() {
             assert(b.d === 4);
         });
     });
-    var C = klas({
+    var C = Klas.extend({
         statics_: {
             toString: function() {
                 return 'C toString';
@@ -107,7 +107,7 @@ describe('klas', function() {
         }
     });
 
-    var D = klas({
+    var D = Klas.extend({
         statics_: {
             toString: function() {
                 return 'D toString';
@@ -119,7 +119,7 @@ describe('klas', function() {
     });
     describe('mixin1', function() {
         it('mixin', function() {
-            var E = klas(C, D, {});
+            var E = C.extend(D, {});
             var e = new E();
             assert(e instanceof E);
             assert(e instanceof C);
@@ -130,20 +130,20 @@ describe('klas', function() {
             assert(E.fnC() === 'fnC');
 
 
-            var F = klas(D, C, {});
+            var F = D.extend(C, {});
             var f = new F();
-            assert('' + new F === 'c toString');
+            assert('' + f === 'c toString');
             assert(F + '' === 'C toString');
-            assert((new F).methodC() === 'methodC');
+            assert(f.methodC() === 'methodC');
             assert(F.fnC() === 'fnC');
         });
     });
     describe('mixin2', function() {
-        var CC = klas(C, {});
-        var DD = klas(D, {});
+        var CC = C.extend({});
+        var DD = D.extend({});
 
         it('mixin', function() {
-            var E = klas(CC, DD, {});
+            var E = CC.extend(DD, {});
             var e = new E();
             assert(e instanceof E);
             assert(e instanceof CC);
@@ -154,17 +154,17 @@ describe('klas', function() {
             assert(E.fnC() === 'fnC');
 
 
-            var F = klas(DD, CC, {});
+            var F = DD.extend(CC, {});
             var f = new F();
-            assert('' + new F === 'c toString');
+            assert('' + f === 'c toString');
             assert(F + '' === 'C toString');
-            assert((new F).methodC() === 'methodC');
+            assert(f.methodC() === 'methodC');
             assert(F.fnC() === 'fnC');
         });
     });
     describe('mixin3', function() {
         it('mixin', function() {
-            var E = klas(C, D, {
+            var E = C.extend(D, {
                 statics_: {
                     fnC: function() {
                         return 'fnE';
